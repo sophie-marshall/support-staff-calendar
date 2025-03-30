@@ -8,7 +8,6 @@
 	<div class="logo">WØRK</div>
 	<div class="nav-options">
 		<a href="/">HOME</a>
-		<a href="/subs">REQUEST A SUB</a>
 		<a href="/availability">AVAILABILITY</a>
 	</div>
 </div>
