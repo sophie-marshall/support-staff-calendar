@@ -1,15 +1,43 @@
 <script lang="ts">
+	// load custom types
+	import type { StaffAvailability } from './types/Staff';
+
+	// load sample data - this should change eventually
+	import { sampleData } from './data/sampleData';
+
+	// set dropdown consts - this should become dynamic at some point
+	const staff: string[] = ['Sophie', 'Mihir', 'Erika', 'Crystal', 'Shazi'];
+	const classTimes: string[] = ['6:00am', '7:00am', '8:00am', '12:00pm', '5:00pm', '6:30pm'];
+
+	// instantiate callback props
+	export let availableStaff: (staff: StaffAvailability[]) => void;
+	export let setShowSubModal: (value: boolean) => void;
+	export let setShowResults: (value: boolean) => void;
+
+	// instantiate vars for form values
 	let selectedName: string = '';
 	let selectedDate: string = '';
 	let selectedTime: string = '';
 
-	const staff: string[] = ['Sophie', 'Mihir', 'Erika', 'Crystal', 'Shazi'];
-	const classTimes: string[] = ['6:00AM', '7:00AM', '8:00AM', '12:00PM', '5:00PM', '6:30PM'];
+	// cancel logic
+	function handleCancel() {
+		setShowSubModal(false);
+	}
 
+	// define logic for when a user submits a sub request
 	function handleSearch() {
-		console.log(
-			`${selectedName} is requesting a sub for ${selectedDate} at ${selectedTime}. Are you available?`
+		// parse date to match our sample data
+		const dateObj = new Date(selectedDate);
+		const dayOfWeek = dateObj.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+
+		// filter full staff list to those who have availability matching the request
+		const filteredStaff = sampleData.filter((person) =>
+			person.availability[dayOfWeek as keyof typeof person.availability]?.includes(selectedTime)
 		);
+
+		// populate props for callback
+		availableStaff(filteredStaff);
+		setShowResults(true);
 	}
 </script>
 
@@ -50,7 +78,10 @@
 			/>
 		</div>
 	</form>
-	<button on:click={handleSearch}> Find a sub </button>
+	<div class="modal-buttons">
+		<button class="cancel" on:click={handleCancel}> CANCEL </button>
+		<button class="find" on:click={handleSearch}> FIND A SUB </button>
+	</div>
 </div>
 
 <style>
@@ -60,25 +91,61 @@
 		width: 100%;
 		gap: 20px;
 	}
+
 	.sub-form form {
+		align-self: center;
 		display: flex;
+		width: 100%;
 		gap: 20px;
 		width: 100%;
 	}
 
 	.sub-form form label {
 		font-weight: 500;
+		font-size: 14px;
+	}
+
+	.sub-form form input {
+		font-size: 14px;
 	}
 
 	.form-item {
 		display: flex;
 		flex-direction: column;
+		width: 100%;
 		gap: 6px;
 	}
 
-	button {
+	.modal-buttons {
+		display: flex;
+		gap: 20px;
+		justify-content: center;
+	}
+
+	.sub-form button {
 		align-self: center;
-		width: 40%;
+		width: 100px;
 		border: none;
+		padding: 10px;
+		border-radius: 2px;
+		transition:
+			transform 0.2s ease-out,
+			box-shadow 0.2s ease-out;
+		font-size: 12px;
+	}
+
+	.sub-form button:hover {
+		transform: translateY(-0.125rem);
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	}
+
+	.find {
+		background: black;
+		color: white;
+	}
+
+	.cancel {
+		background: rgb(133, 133, 133);
+		color: white;
 	}
 </style>
