@@ -1,6 +1,6 @@
 <script lang="ts">
 	// import custom types
-	import type { StaffAvailability } from './types/Staff';
+	import type { StaffAvailability } from './types/StaffAvailability';
 
 	// import child components
 	import SubForm from './SubForm.svelte';
@@ -13,7 +13,6 @@
 	let showResults: boolean = false;
 	let headerText: string = "Let's get the details";
 	let selectedStaffMember: string = '';
-	let requestorName: string = '';
 	let showConfirmation: boolean = false;
 	let confirmationMessage: string = '';
 
@@ -25,9 +24,6 @@
 		showResults = value;
 		headerText = 'Please select an available team member:';
 		selectedStaffMember = '';
-	}
-	function handleRequestorName(name: string) {
-		requestorName = name;
 	}
 
 	// button handlers
@@ -48,7 +44,7 @@
 
 		setTimeout(() => {
 			setShowSubModal(false);
-		}, 3000);
+		}, 2500);
 	}
 </script>
 
@@ -60,7 +56,6 @@
 				availableStaff={handleFoundStaff}
 				{setShowSubModal}
 				setShowResults={handleSetShowResults}
-				requestorName={handleRequestorName}
 			/>
 		</div>
 		<div class="results" style={showResults ? 'display: flex' : 'display: none'}>

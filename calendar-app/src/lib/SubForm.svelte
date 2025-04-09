@@ -1,6 +1,6 @@
 <script lang="ts">
 	// load custom types
-	import type { StaffAvailability } from './types/Staff';
+	import type { StaffAvailability } from './types/StaffAvailability';
 
 	// load sample data - this should change eventually
 	import { sampleData } from './data/sampleData';
@@ -13,7 +13,6 @@
 	export let availableStaff: (staff: StaffAvailability[]) => void;
 	export let setShowSubModal: (value: boolean) => void;
 	export let setShowResults: (value: boolean) => void;
-	export let requestorName: (name: string) => void;
 
 	// instantiate vars for form values
 	let selectedName: string = '';
@@ -39,7 +38,6 @@
 		// populate props for callback
 		availableStaff(filteredStaff);
 		setShowResults(true);
-		requestorName(selectedName);
 	}
 </script>
 
