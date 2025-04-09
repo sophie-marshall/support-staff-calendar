@@ -12,9 +12,10 @@
 	let availableStaff: StaffAvailability[] = [];
 	let showResults: boolean = false;
 	let headerText: string = "Let's get the details";
-	let subSelected: boolean = false;
-	let requestButtonText: string = '';
 	let selectedStaffMember: string = '';
+	let requestorName: string = '';
+	let showConfirmation: boolean = false;
+	let confirmationMessage: string = '';
 
 	// handle callbacks
 	function handleFoundStaff(staff: StaffAvailability[]) {
@@ -22,48 +23,73 @@
 	}
 	function handleSetShowResults(value: boolean) {
 		showResults = value;
-		headerText = "Here's who's available";
+		headerText = 'Please select an available team member:';
+		selectedStaffMember = '';
+	}
+	function handleRequestorName(name: string) {
+		requestorName = name;
 	}
 
-	// logic to actually request the sub (for now just a console log)
+	// button handlers
 	function handleSubOptionClick(subName: string) {
-		console.log('handleSubOptionClick Triggered');
-		subSelected = true;
-		requestButtonText = `Request a sub from ${subName}`;
+		if (selectedStaffMember === subName) {
+			selectedStaffMember = '';
+		} else {
+			selectedStaffMember = subName;
+		}
 	}
 
-	function handleRequestSub() {
-		console.log('Sub requested!');
-	}
+	function handleRequestSub(subName: string) {
+		showConfirmation = !showConfirmation;
+		if (showConfirmation === true) {
+			confirmationMessage = `We will notify you once ${subName} responds.`;
+		}
+		headerText = 'Request sent! 🚀';
 
-	// testing params
-	import { sampleData } from './data/sampleData';
-	availableStaff = sampleData;
+		setTimeout(() => {
+			setShowSubModal(false);
+		}, 3000);
+	}
 </script>
 
 <div class="sub-modal">
 	<h4>{headerText}</h4>
 	<div class="modal-contents">
-		<!-- <div class="form-container" style={showResults ? 'display: none' : 'display: flex'}>
+		<div class="form-container" style={showResults ? 'display: none' : 'display: flex'}>
 			<SubForm
 				availableStaff={handleFoundStaff}
 				{setShowSubModal}
 				setShowResults={handleSetShowResults}
+				requestorName={handleRequestorName}
 			/>
-		</div> -->
-		<!-- <div class="results" style={showResults ? 'display: flex' : 'display: none'}> -->
-		<div class="results">
-			<div class="available-staff">
+		</div>
+		<div class="results" style={showResults ? 'display: flex' : 'display: none'}>
+			<div class="available-staff" style={showConfirmation ? 'display: none' : 'display: flex'}>
 				{#each availableStaff as subOption}
-					<button class="staff-member" on:click={() => handleSubOptionClick(subOption.firstName)}>
+					<button
+						class="staff-member {selectedStaffMember === subOption.firstName
+							? 'staff-member-selected'
+							: ''}"
+						on:click={() => handleSubOptionClick(subOption.firstName)}
+					>
 						{subOption.firstName}
 						{subOption.lastName}
 					</button>
 				{/each}
 			</div>
-			<div class="results-buttons">
+			<div class="results-buttons" style={showConfirmation ? 'display: none' : 'display: flex'}>
 				<button on:click={() => handleSetShowResults(false)}>BACK</button>
-				<button on:click={() => handleRequestSub}>{requestButtonText}</button>
+				<button
+					class="request-sub-button {selectedStaffMember === '' ? 'request-sub-unavailable' : ''}"
+					disabled={selectedStaffMember === ''}
+					on:click={() => handleRequestSub(selectedStaffMember)}>REQUEST SUB</button
+				>
+			</div>
+			<div
+				class="request-confirmation"
+				style={showConfirmation ? 'display: flex' : 'display: none'}
+			>
+				{@html confirmationMessage}
 			</div>
 		</div>
 	</div>
@@ -112,6 +138,7 @@
 		color: black;
 		background: transparent;
 		font-size: 14px;
+		cursor: pointer;
 	}
 
 	.staff-member:hover {
@@ -125,18 +152,32 @@
 	.staff-member-selected {
 		border: 1px solid black;
 		font-weight: 700;
+		background: rgb(230, 230, 230);
+		transform: translateY(-0.125rem);
 	}
 
 	.results-buttons {
 		display: flex;
+		justify-content: center;
 		gap: 6px;
 	}
 
-	button {
+	.request-sub-unavailable {
+		background: rgb(110, 110, 110);
+		cursor: not-allowed;
+		transform: none;
+		transition: none;
+	}
+
+	.request-sub-unavailable:hover {
+		transform: none;
+	}
+
+	/* button {
 		background: black;
 		color: white;
 		align-self: center;
-		width: 100px;
+		min-width: 100px;
 		border: none;
 		padding: 10px;
 		border-radius: 2px;
@@ -149,5 +190,5 @@
 	button:hover {
 		transform: translateY(-0.125rem);
 		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-	}
+	} */
 </style>

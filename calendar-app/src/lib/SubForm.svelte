@@ -13,6 +13,7 @@
 	export let availableStaff: (staff: StaffAvailability[]) => void;
 	export let setShowSubModal: (value: boolean) => void;
 	export let setShowResults: (value: boolean) => void;
+	export let requestorName: (name: string) => void;
 
 	// instantiate vars for form values
 	let selectedName: string = '';
@@ -38,6 +39,7 @@
 		// populate props for callback
 		availableStaff(filteredStaff);
 		setShowResults(true);
+		requestorName(selectedName);
 	}
 </script>
 
@@ -80,7 +82,15 @@
 	</form>
 	<div class="modal-buttons">
 		<button class="cancel" on:click={handleCancel}> CANCEL </button>
-		<button class="find" on:click={handleSearch}> FIND A SUB </button>
+		<button
+			class="find {selectedName != '' && selectedDate != '' && selectedTime != ''
+				? ''
+				: 'find-disabled'}"
+			disabled={selectedName === '' || selectedDate === '' || selectedTime === ''}
+			on:click={handleSearch}
+		>
+			FIND A SUB
+		</button>
 	</div>
 </div>
 
@@ -122,30 +132,11 @@
 		justify-content: center;
 	}
 
-	.sub-form button {
-		align-self: center;
-		width: 100px;
-		border: none;
-		padding: 10px;
-		border-radius: 2px;
-		transition:
-			transform 0.2s ease-out,
-			box-shadow 0.2s ease-out;
-		font-size: 12px;
+	.find-disabled {
+		background: var(--disabled-grey);
+		cursor: not-allowed;
 	}
-
-	.sub-form button:hover {
-		transform: translateY(-0.125rem);
-		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-	}
-
-	.find {
-		background: black;
-		color: white;
-	}
-
-	.cancel {
-		background: rgb(133, 133, 133);
-		color: white;
+	.find-disabled:hover {
+		transform: none;
 	}
 </style>
