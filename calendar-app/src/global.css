@@ -3,8 +3,7 @@
 
 :root {
 	--primary-blue: rgba(3, 23, 214, 1);
-	--primary-blue-hover-state:           
-;
+	--disabled-grey: rgb(110, 110, 110);  
 }
 
 body,
@@ -16,3 +15,23 @@ html {
 main {
 	padding: 30px;
 }
+
+button {
+	display: flex;
+	justify-content: center;
+	min-width: 100px;
+	border: none;
+	padding: 10px;
+	border-radius: 2px;
+	transition:
+		transform 0.2s ease-out,
+		box-shadow 0.2s ease-out;
+	font-size: 12px;
+	background: black;
+	color: white
+}
+
+	button:hover {
+		transform: translateY(-0.125rem);
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	}
