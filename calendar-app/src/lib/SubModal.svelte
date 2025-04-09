@@ -12,6 +12,9 @@
 	let availableStaff: StaffAvailability[] = [];
 	let showResults: boolean = false;
 	let headerText: string = "Let's get the details";
+	let subSelected: boolean = false;
+	let requestButtonText: string = '';
+	let selectedStaffMember: string = '';
 
 	// handle callbacks
 	function handleFoundStaff(staff: StaffAvailability[]) {
@@ -24,33 +27,44 @@
 
 	// logic to actually request the sub (for now just a console log)
 	function handleSubOptionClick(subName: string) {
-		console.log('Requesting Sub From: ', subName);
+		console.log('handleSubOptionClick Triggered');
+		subSelected = true;
+		requestButtonText = `Request a sub from ${subName}`;
 	}
+
+	function handleRequestSub() {
+		console.log('Sub requested!');
+	}
+
+	// testing params
+	import { sampleData } from './data/sampleData';
+	availableStaff = sampleData;
 </script>
 
 <div class="sub-modal">
 	<h4>{headerText}</h4>
 	<div class="modal-contents">
-		<div class="form-container" style={showResults ? 'display: none' : 'display: flex'}>
+		<!-- <div class="form-container" style={showResults ? 'display: none' : 'display: flex'}>
 			<SubForm
 				availableStaff={handleFoundStaff}
 				{setShowSubModal}
 				setShowResults={handleSetShowResults}
 			/>
-		</div>
-		<div class="results" style={showResults ? 'display: flex' : 'display: none'}>
+		</div> -->
+		<!-- <div class="results" style={showResults ? 'display: flex' : 'display: none'}> -->
+		<div class="results">
 			<div class="available-staff">
 				{#each availableStaff as subOption}
-					<button
-						class="staff-member"
-						on:click={() => console.log(`Requesting a sub from ${subOption.firstName}`)}
-					>
+					<button class="staff-member" on:click={() => handleSubOptionClick(subOption.firstName)}>
 						{subOption.firstName}
 						{subOption.lastName}
 					</button>
 				{/each}
 			</div>
-			<button on:click={() => handleSetShowResults(false)}>BACK</button>
+			<div class="results-buttons">
+				<button on:click={() => handleSetShowResults(false)}>BACK</button>
+				<button on:click={() => handleRequestSub}>{requestButtonText}</button>
+			</div>
 		</div>
 	</div>
 </div>
@@ -86,17 +100,18 @@
 	.available-staff {
 		display: flex;
 		flex-direction: column;
-		font-size: 14px;
-		gap: 5px;
+		gap: 12px;
 	}
 
 	.staff-member {
 		display: flex;
 		padding: 10px;
 		border-radius: 2px;
+		border: 0.5px solid black;
 		width: 100%;
 		color: black;
 		background: transparent;
+		font-size: 14px;
 	}
 
 	.staff-member:hover {
@@ -105,6 +120,16 @@
 		padding: 10px;
 		border-radius: 2px;
 		width: 100%;
+	}
+
+	.staff-member-selected {
+		border: 1px solid black;
+		font-weight: 700;
+	}
+
+	.results-buttons {
+		display: flex;
+		gap: 6px;
 	}
 
 	button {
