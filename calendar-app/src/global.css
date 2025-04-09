@@ -3,6 +3,7 @@
 
 :root {
 	--primary-blue: rgba(3, 23, 214, 1);
+	--light-grey: rgb(238, 238, 238);  
 	--disabled-grey: rgb(110, 110, 110);  
 }
 
@@ -13,15 +14,18 @@ html {
 }
 
 main {
+	display: flex;
+	flex-direction: column;
 	padding: 30px;
 }
 
 button {
 	display: flex;
 	justify-content: center;
+	width: fit-content;
 	min-width: 100px;
 	border: none;
-	padding: 10px;
+	padding: 10px 20px;
 	border-radius: 2px;
 	transition:
 		transform 0.2s ease-out,
